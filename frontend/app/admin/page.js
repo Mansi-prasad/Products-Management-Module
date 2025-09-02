@@ -28,26 +28,46 @@ export default function AdminIndex() {
   }
 
   async function togglePublish(productId) {
+    // Find product first (from current state)
+    const product = products.find((p) => p.product_id === productId);
+    if (!product) return;
+
+    const newStatus = product.status === "Published" ? "unpublish" : "publish";
+
     setProducts((prev) =>
       prev.map((p) =>
         p.product_id === productId
           ? {
               ...p,
-              status: p.status === "Published" ? "Draft" : "Published",
+              status: newStatus === "publish" ? "Published" : "Draft",
             }
           : p
       )
     );
 
-    const product = products.find((p) => p.product_id === productId);
-    if (!product) return;
-    const newStatus = product.status === "Published" ? "unpublish" : "publish";
+    try {
+      const res = await fetch(
+        `${API}/api/admin/products/${productId}/${newStatus}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ updated_by: "admin" }),
+        }
+      );
 
-    await fetch(`${API}/api/admin/products/${productId}/${newStatus}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ updated_by: "admin" }),
-    });
+      if (!res.ok) throw new Error("Failed to update product");
+      const updated = await res.json();
+
+      setProducts((prev) =>
+        prev.map((p) => (p.product_id === productId ? updated : p))
+      );
+    } catch (err) {
+      console.error(err);
+      // Rollback if request failed
+      setProducts((prev) =>
+        prev.map((p) => (p.product_id === productId ? product : p))
+      );
+    }
   }
 
   return (

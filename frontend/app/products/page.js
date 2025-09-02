@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import Link from "next/link";
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const API = process.env.NEXT_PUBLIC_API_URL;
@@ -16,6 +16,13 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div>
+        <Link href="/">
+          <button className="bg-gray-500 hover:bg-gray-600 hover:cursor-pointer text-white font-semibold py-2 px-4 rounded-lg shadow-md transition">
+            Back to Home
+          </button>
+        </Link>
+      </div>
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
           Live Products
