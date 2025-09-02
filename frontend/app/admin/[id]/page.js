@@ -29,18 +29,33 @@ export default function EditProduct() {
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
-    await fetch(`${API}/api/admin/products/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        product_name: product.product_name,
-        product_desc: product.product_desc,
-        status: product.status,
-        updated_by: "admin",
-      }),
-    });
-    setSaving(false);
-    router.push("/admin");
+
+    try {
+      const res = await fetch(`${API}/api/admin/products/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_name: product.product_name,
+          product_desc: product.product_desc,
+          status: product.status,
+          updated_by: "admin",
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(errorData.error || "Failed to save product");
+        setSaving(false);
+        return;
+      }
+
+      router.push("/admin");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong while saving.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!product)
