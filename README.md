@@ -1,4 +1,6 @@
-# Products Management Module
+# Products Management Module  
+
+**Live Link:** https://products-management-module.vercel.app/
 
 This project implements a **Products Management Module** using **Next.js**, **Express.js**, and **MySQL**. The system supports full product lifecycle management, including **adding**, **editing**, **deleting (soft delete)**, and **publishing** products.
 
@@ -144,8 +146,3 @@ npm run dev
 **Add New Product Page:**
 
 ![Add New Product Screenshot](screenshots/new-product.png)
-
----
-
-## Live Link  
-https://products-management-module.vercel.app/
