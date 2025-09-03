@@ -6,6 +6,7 @@ import { BiShowAlt } from "react-icons/bi";
 import EditProductModal from "@/components/EditProductModal";
 import NewProductModal from "@/components/NewProductModal";
 import DeleteProductModal from "@/components/DeleteProductModal";
+import Footer from "@/components/Footer";
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Home() {
@@ -28,8 +29,8 @@ export default function Home() {
   }, []);
 
   return (
-    <>
-      <div className="min-h-screen bg-gray-50 p-4">
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-1 bg-gray-50 p-4">
         <div className="max-w-7xl mx-auto">
           {/* Header section  */}
           <div className="bg-white rounded-lg shadow-sm p-6 mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
@@ -87,10 +88,10 @@ export default function Home() {
                     products.map((p) => (
                       <tr
                         key={p.product_id}
-                        className="border-t border-gray-300 hover:bg-gray-50 hover:cursor-pointer text-sm"
+                        className="border-t border-gray-300 hover:bg-gray-50 hover:cursor-pointer text-sm "
                       >
                         {/* Product name and description */}
-                        <td className="p-3">
+                        <td className="p-5">
                           <div className="font-medium text-gray-800">
                             {p.product_name}
                           </div>
@@ -102,7 +103,7 @@ export default function Home() {
                         </td>
 
                         {/* Status */}
-                        <td className="p-3">
+                        <td className="p-5">
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-medium
                             ${
@@ -126,10 +127,10 @@ export default function Home() {
                         </td>
 
                         {/* Created By */}
-                        <td className="p-3">{p.created_by || "admin"}</td>
+                        <td className="p-5">{p.created_by || "admin"}</td>
 
                         {/* Last Updated */}
-                        <td className="p-3">
+                        <td className="p-4">
                           {new Date(p.updated_at).toLocaleDateString()}
                           {p.updated_by && (
                             <div className="text-gray-500 text-xs">
@@ -138,7 +139,7 @@ export default function Home() {
                           )}
                         </td>
                         {/* Actions */}
-                        <td className="p-3 space-x-2">
+                        <td className="p-5 space-x-2">
                           <button
                             onClick={() => {
                               setSelectedProduct(p);
@@ -199,7 +200,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
       {/* Modals */}
       {isEditOpen && (
         <EditProductModal
@@ -225,6 +226,8 @@ export default function Home() {
           reload={load}
         />
       )}
-    </>
+      {/* Footer */}
+      <Footer />
+    </div>
   );
 }

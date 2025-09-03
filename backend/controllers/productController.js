@@ -4,7 +4,7 @@ import pool from "../config/db.js";
 export const getPublishedProducts = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      `SELECT product_id, product_name, product_desc, created_by 
+      `SELECT product_id, product_name, product_desc, created_by, created_at, status
        FROM Products
        WHERE status = ? AND is_deleted = FALSE
        ORDER BY updated_at DESC, created_at DESC`,
