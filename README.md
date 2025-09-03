@@ -131,6 +131,8 @@ npm run dev
 
 ![Home Page Screenshot](screenshots/home.png)
 
+**Mobile Home Page:** 
+
 ![Mobile Home Page Screenshot](screenshots/mobile-home.png)
 
 **Live Products Page:**
