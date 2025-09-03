@@ -131,13 +131,11 @@ npm run dev
 
 ![Home Page Screenshot](screenshots/home.png)
 
-**Products Page:**
+![Mobile Home Page Screenshot](screenshots/mobile-home.png)
+
+**Live Products Page:**
 
 ![Products Page Screenshot](screenshots/products.png)
-
-**Admin Dashboard:**
-
-![Admin Dashboard Screenshot](screenshots/admin-dashboard.png)
 
 **Product Edit Page:**
 
@@ -146,3 +144,8 @@ npm run dev
 **Add New Product Page:**
 
 ![Add New Product Screenshot](screenshots/new-product.png)
+
+**Delete Product Page:**
+
+![Delete Product Screenshot](screenshots/delete-product.png)
+
