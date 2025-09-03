@@ -21,12 +21,12 @@ export const getPublishedProducts = async (req, res) => {
 export const getAllProducts = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      `SELECT * FROM Products ORDER BY updated_at DESC, created_at DESC`
+      `SELECT * FROM Products WHERE is_deleted = FALSE ORDER BY updated_at DESC, created_at DESC`
     );
     res.json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "DB error" });
+    res.status(500).json({ error: "DB error to get all products" });
   }
 };
 
@@ -43,7 +43,7 @@ export const getProductById = async (req, res) => {
     res.json(rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "DB error" });
+    res.status(500).json({ error: "DB error to get the product" });
   }
 };
 
@@ -54,10 +54,10 @@ export const createProduct = async (req, res) => {
       product_name,
       product_desc = "",
       status = "Draft",
-      created_by = "admin", // can fetch from the logged-in user
+      created_by = "admin",
     } = req.body;
     if (!product_name)
-      return res.status(400).json({ error: "product_name required" });
+      return res.status(400).json({ error: "Product name required" });
 
     const [result] = await pool.execute(
       `INSERT INTO Products (product_name, product_desc, status, created_by) VALUES (?, ?, ?, ?)`,
@@ -70,7 +70,7 @@ export const createProduct = async (req, res) => {
     res.status(201).json(newRow[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "DB error" });
+    res.status(500).json({ error: "DB error to create product" });
   }
 };
 
@@ -78,20 +78,15 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const {
-      product_name,
-      product_desc,
-      status,
-      updated_by = "admin", // can fetch from the logged-in user
-    } = req.body;
+    const { product_name, product_desc, status, updated_by } = req.body;
     if (!product_name)
-      return res.status(400).json({ error: "product_name required" });
+      return res.status(400).json({ error: "Product name required" });
 
     await pool.execute(
       `UPDATE Products 
        SET product_name = ?, product_desc = ?, status = ?, updated_by = ? 
        WHERE product_id = ?`,
-      [product_name, product_desc, status, updated_by, id]
+      [product_name, product_desc, status, updated_by || "admin", id]
     );
     const [updated] = await pool.query(
       `SELECT * FROM Products WHERE product_id = ?`,
@@ -100,7 +95,7 @@ export const updateProduct = async (req, res) => {
     res.json(updated[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "DB error" });
+    res.status(500).json({ error: "DB error to update product" });
   }
 };
 
@@ -113,10 +108,14 @@ export const softDeleteProduct = async (req, res) => {
       `UPDATE Products SET is_deleted = TRUE, updated_by = ? WHERE product_id = ?`,
       [updated_by, id]
     );
-    res.json({ ok: true });
+    const [updated] = await pool.query(
+      `SELECT * FROM Products WHERE product_id = ?`,
+      [id]
+    );
+    res.json(updated[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "DB error" });
+    res.status(500).json({ error: "DB error to soft delete the product." });
   }
 };
 
